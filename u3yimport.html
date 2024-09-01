@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Import Cost Calculator</title>
+    <title>Calculateur de Coût d'Importation de Véhicule</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,65 +57,68 @@
 </head>
 <body>
     <div class="container">
-        <h1>Car Import Cost Calculator</h1>
+        <h1>Calculateur de Coût d'Importation de Véhicule</h1>
         <form id="calculator">
-            <label for="priceType">Price Type:</label>
+            <label for="priceType">Type de Prix :</label>
             <select id="priceType" name="priceType">
-                <option value="ht">HT (Excluding Taxes)</option>
-                <option value="ttc">TTC (Including Taxes)</option>
+                <option value="ht">HT (Hors Taxes)</option>
+                <option value="ttc">TTC (Toutes Taxes Comprises)</option>
             </select>
 
-            <label for="price">Price (in Euros):</label>
+            <label for="price">Prix (en Euros) :</label>
             <input type="number" id="price" name="price" value="15000" step="0.01">
 
-            <label for="vatRate">VAT Rate (in %; e.g., 19 for Germany):</label>
+            <label for="vatRate">Taux de TVA (en % ; par exemple, 19 pour l'Allemagne) :</label>
             <input type="number" id="vatRate" name="vatRate" value="19" step="0.01">
 
-            <label for="unofficialRate">Unofficial Exchange Rate (1 Euro to DZD):</label>
+            <label for="unofficialRate">Taux de Change Non Officiel (1 Euro en DZD) :</label>
             <input type="number" id="unofficialRate" name="unofficialRate" value="241" step="0.01">
 
-            <label for="officialRate">Official Exchange Rate (1 Euro to DZD):</label>
+            <label for="officialRate">Taux de Change Officiel (1 Euro en DZD) :</label>
             <input type="number" id="officialRate" name="officialRate" value="147" step="0.01">
 
-            <button type="button" onclick="calculateTotal()">Calculate Total Price</button>
+            <label for="transportFees">Frais de Transport (en DZD) :</label>
+            <input type="number" id="transportFees" name="transportFees" value="15000" step="0.01">
+
+            <button type="button" onclick="calculateTotal()">Calculer le Prix Total</button>
         </form>
 
-        <h2 id="result">Total Price: </h2>
+        <h2 id="result">Prix Total : </h2>
     </div>
 
     <script>
         function calculateTotal() {
-            // Get values from input
+            // Récupérer les valeurs des entrées
             const price = parseFloat(document.getElementById('price').value);
             const priceType = document.getElementById('priceType').value;
             const vatRate = parseFloat(document.getElementById('vatRate').value) / 100;
             const unofficialRate = parseFloat(document.getElementById('unofficialRate').value);
             const officialRate = parseFloat(document.getElementById('officialRate').value);
+            const transportFees = parseFloat(document.getElementById('transportFees').value);
             
-            // Conversion rates and fees
+            // Taux de droits de douane
             const customsRate = 0.20;
-            const shippingCosts = 150000;
 
             let htPrice;
 
-            // Convert TTC price to HT if needed
+            // Convertir le prix TTC en HT si nécessaire
             if (priceType === 'ttc') {
                 htPrice = price / (1 + vatRate);
             } else {
                 htPrice = price;
             }
 
-            // Calculate Base Price in DZD using unofficial rate
+            // Calculer le prix de base en DZD en utilisant le taux non officiel
             const basePriceDZD = htPrice * unofficialRate;
 
-            // Calculate Customs Duty using official rate
+            // Calculer les droits de douane en utilisant le taux officiel
             const customsDuty = customsRate * htPrice * officialRate;
 
-            // Calculate Total Price
-            const totalPrice = basePriceDZD + customsDuty + shippingCosts;
+            // Calculer le prix total
+            const totalPrice = basePriceDZD + customsDuty + transportFees;
 
-            // Display the result
-            document.getElementById('result').innerText = `Total Price: ${totalPrice.toFixed(2)} DZD`;
+            // Afficher le résultat
+            document.getElementById('result').innerText = `Prix Total : ${totalPrice.toFixed(2)} DZD`;
         }
     </script>
 </body>
